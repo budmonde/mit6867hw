@@ -30,22 +30,44 @@ def negativeGaussianDist(mean, cov):
     Given the mean and the covariance, instantiates a function
     that returns the gradient of a negativeGaussianDist
 """
-def negGaussGradDist(mean, cov):
+def negativeGaussGradDist(mean, cov):
     def gaussianGradSampler(x):
         coeff = -multivariate_normal(x, mean=mean, cov=cov)
         return  coeff * np.linalg.inv(cov).dot(x - mean)
     return gaussianGradSampler
 """
-    Implementation of the Quadratic Bowl function
+    Given A and b, returns a function that returns the Quadratic Bowl for a given x
 """
-def quadBowl(A, b, x):
-    x_transpose = np.transpose(x)
-    first_term = 0.5 * np.dot(np.dot(x_transpose, A), x)
-    second_term = x_transpose * b
-    return first_term - second_term
+def quadBowl(A, b):
+    def quadBowlSampler(x):
+        x_transpose = np.transpose(x)
+        first_term = 0.5 * np.dot(np.dot(x_transpose, A), x)
+        second_term = x_transpose * b
+        return first_term - second_term
+    return quadBowlSampler
 
 """
-    Implementation of the derivative of the Quadratic Bowl function
+    Given A and b, returns a function that returns the gradient of the Quadratic Bowl for a given x
 """
-def quadBowlDerivative(A, b, x):
-    return np.dot(A, x) - b
+def quadBowlGrad(A, b):
+    def quadBowlGradSampler(x):
+        return np.dot(A, x) - b
+    return quadBowlGradSampler
+
+# params = getParameters()
+# gaussMean = params[0]
+# gaussCov = params[1]
+# quadA = params[2]
+# quadb = params[3]
+
+# actualGauss = negativeGaussianDist(gaussMean, gaussCov)
+# actualGaussGrad = negativeGaussGradDist(gaussMean, gaussCov)
+# actualQuadBowl = quadBowl(quadA, quadb)
+# actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
+
+# x = 0
+
+# print actualGauss(x)
+# print actualGaussGrad(x)
+# print actualQuadBowl(x)
+# print actualQuadBowlGrad(x)
