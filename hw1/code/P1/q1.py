@@ -7,9 +7,9 @@ import numpy as np
 def gradientDescent(obj_func, grad_func, init, step, epsilon):
     assert step > 0
     assert epsilon > 0
+    previous_value = float("inf")
     current_value = init
-    gradient = grad_func(current_value)
-    while abs(gradient) >= epsilon:
-        current_value -= step * gradient
-        gradient = grad_func(current_value)
+    while abs(current_value - previous_value) > epsilon:
+        previous_value = current_value
+        current_value -= step * grad_func(current_value)
     return current_value
