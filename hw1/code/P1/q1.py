@@ -7,14 +7,16 @@ from loadFittingDataP1 import getData as getFittingData
     Runs gradient descent given an objective function along
     with its gradient.
 """
-def gradientDescent(obj_func, grad_func, init, step, epsilon):
+def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1):
     assert step > 0
     assert epsilon > 0
     previous_value = float("inf")
     current_value = init
+    iteration = 0
     while abs(obj_func(current_value) - obj_func(previous_value)) > epsilon:
         previous_value = current_value
-        current_value -= step * grad_func(current_value)
+        current_value -= step(iteration) * grad_func(current_value)
+        iteration += 1
     return current_value
 
 """
