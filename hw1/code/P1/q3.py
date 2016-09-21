@@ -1,7 +1,4 @@
 import numpy as np
-from scipy.stats import multivariate_normal
-from loadParametersP1 import getData as getParameters
-from loadFittingDataP1 import getData as getFittingData
 
 # Part a and b
 
@@ -31,3 +28,15 @@ def JGrad(X, y):
         loss = guess - y
         return np.dot(X_transpose, loss)
     return JGradSampler
+
+"""
+    Given a and b, returns a function that, given the iteration
+    t, returns the learning rate corresponding to that iteration
+"""
+def learningRate(a, b):
+    assert a >= 0
+    assert b > 0.5
+    assert b < 1.0
+    def learningRateSampler(t):
+        return (a + t) ** -b
+    return learningRateSampler
