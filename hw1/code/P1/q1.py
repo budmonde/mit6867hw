@@ -24,7 +24,7 @@ def gradientDescent(obj_func, grad_func, init, step, epsilon):
 """
 def negativeGaussianDist(mean, cov):
     def gaussianSampler(x):
-        return -multivariate_normal(x, mean=mean, cov=cov)
+        return -multivariate_normal.pdf(x, mean, cov)
     return gaussianSampler
 """
     Given the mean and the covariance, instantiates a function
@@ -32,7 +32,7 @@ def negativeGaussianDist(mean, cov):
 """
 def negativeGaussGradDist(mean, cov):
     def gaussianGradSampler(x):
-        coeff = -multivariate_normal(x, mean=mean, cov=cov)
+        coeff = -multivariate_normal.pdf(x, mean=mean, cov=cov)
         return  coeff * np.linalg.inv(cov).dot(x - mean)
     return gaussianGradSampler
 """
@@ -54,20 +54,20 @@ def quadBowlGrad(A, b):
         return np.dot(A, x) - b
     return quadBowlGradSampler
 
-# params = getParameters()
-# gaussMean = params[0]
-# gaussCov = params[1]
-# quadA = params[2]
-# quadb = params[3]
+params = getParameters()
+gaussMean = params[0]
+gaussCov = params[1]
+quadA = params[2]
+quadb = params[3]
 
-# actualGauss = negativeGaussianDist(gaussMean, gaussCov)
-# actualGaussGrad = negativeGaussGradDist(gaussMean, gaussCov)
-# actualQuadBowl = quadBowl(quadA, quadb)
-# actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
+actualGauss = negativeGaussianDist(gaussMean, gaussCov)
+actualGaussGrad = negativeGaussGradDist(gaussMean, gaussCov)
+actualQuadBowl = quadBowl(quadA, quadb)
+actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
 
-# x = 0
+x = np.asarray((0,0))
 
-# print actualGauss(x)
-# print actualGaussGrad(x)
-# print actualQuadBowl(x)
-# print actualQuadBowlGrad(x)
+print actualGauss(x)
+print actualGaussGrad(x)
+print actualQuadBowl(x)
+print actualQuadBowlGrad(x)
