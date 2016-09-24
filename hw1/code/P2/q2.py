@@ -28,7 +28,6 @@ def SSEgrad(dataset, labels):
   return SSEgradSampler
 
 
-
 X, Y = getData(False)
 weights = weightML(X, Y, 1)
 print SSE(X, Y, weights)
