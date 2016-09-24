@@ -8,7 +8,7 @@ def SSE(dataset, labels, weights):
   assert len(labels.shape) == 1 and weights.shape[0]
   basis_function = np.polynomial.Polynomial(weights)
   Y = np.apply_along_axis(basis_function, 0, X)
-  euclid = np.linalg.norm(labels - np.ravel(Y))
+  euclid = np.linalg.norm(labels - Y)
   return euclid**2
 
 
@@ -21,7 +21,6 @@ def SSEgrad(dataset, labels):
     Y = np.apply_along_axis(basis_function, 0, X)
     
     power_X = np.power(dataset[:,np.newaxis], np.arange(weights.size)).T
-    print power_X.shape
     gradient = 2 * np.dot(power_X, Y - labels)
     return gradient
   return SSEgradSampler
@@ -29,9 +28,14 @@ def SSEgrad(dataset, labels):
 
 
 X, Y = getData(False)
-weights = weightML(X, Y, 1)
+weights = weightML(X, Y, 5)
 print SSE(X, Y, weights)
 sampler = SSEgrad(X, Y)
 print sampler(weights)
 
-print SSE(X, Y, weights+np.asarray((0.5 * 1e-1, 0))) - SSE(X, Y, weights-np.asarray((0.5 *1e-1, 0)))
+def centralDifference(f, x, h):
+    return f(x + 0.5*h) - f(x - 0.5*h)
+
+print centralDifference(SSE, X, 0.01)
+
+# print SSE(X, Y, weights+np.asarray((0.5 * 1e-1, 0))) - SSE(X, Y, weights-np.asarray((0.5 *1e-1, 0)))
