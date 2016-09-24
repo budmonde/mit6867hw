@@ -19,7 +19,7 @@ def weightML(X, Y, M):
 
 	pseudo_inverse = np.dot(np.linalg.inv(np.dot(phi_transposed, phi)), phi_transposed)
 	return np.dot(pseudo_inverse, Y)
-"""
+
 M_possible = list(range(1, 11))
 
 X, Y = getCurveData(False)
@@ -34,4 +34,3 @@ for M in M_possible:
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.show()
-"""
