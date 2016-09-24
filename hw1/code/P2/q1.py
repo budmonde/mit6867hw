@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np 
 from loadFittingDataP2 import getData as getCurveData
-
+"""
 y = np.ones(3)
 x = np.polynomial.Polynomial(y)
-
+"""
 """
 	Given an array of 1D points X, a vector of corresponding values Y,
 	and the maximum order of a simple polynomial basis M, returns the
@@ -19,7 +19,7 @@ def weightML(X, Y, M):
 
 	pseudo_inverse = np.dot(np.linalg.inv(np.dot(phi_transposed, phi)), phi_transposed)
 	return np.dot(pseudo_inverse, Y)
-
+"""
 M_possible = list(range(1, 11))
 
 X, Y = getCurveData(False)
@@ -34,3 +34,4 @@ for M in M_possible:
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.show()
+"""
