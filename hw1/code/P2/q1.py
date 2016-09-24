@@ -14,7 +14,7 @@ def weightML(X, Y, M):
 	num_terms = M + 1
 	X_tiled = np.tile(X, (num_terms, 1))
 	phi = X_tiled.T
-	phi_transposed = np.power(xrange(num_terms)[:,np.newaxis],phi).T
+	phi_transposed = np.power(np.arange(num_terms)[:,np.newaxis],phi.T).T
 
 	pseudo_inverse = np.dot(np.linalg.inv(np.dot(phi_transposed, phi)), phi_transposed)
 	return np.dot(pseudo_inverse, Y)
@@ -27,6 +27,7 @@ for M in M_possible:
 	weight_ml = weightML(X, Y, M)
 	basis_function = np.polynomial.Polynomial(weight_ml)
 	predicted_Y = np.apply_along_axis(basis_function, 0, X)
+        print predicted_Y
 
 	plt.plot(X,predicted_Y,'o')
 	plt.xlabel('x')
