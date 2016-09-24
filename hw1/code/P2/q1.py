@@ -22,15 +22,16 @@ def weightML(X, Y, M):
 
 M_possible = list(range(1, 11))
 
-# X, Y = getCurveData(False)
+X, Y = getCurveData(False)
 
-# for M in M_possible:
-# 	weight_ml = weightML(X, Y, M)
-# 	basis_function = np.polynomial.Polynomial(weight_ml)
-# 	predicted_Y = np.apply_along_axis(basis_function, 0, X)
-#         print predicted_Y
+def plotGraphs():
+	for M in M_possible:
+		weight_ml = weightML(X, Y, M)
+		basis_function = np.polynomial.Polynomial(weight_ml)
+		predicted_Y = np.apply_along_axis(basis_function, 0, X)
+	        print predicted_Y
 
-# 	plt.plot(X,predicted_Y,'o')
-# 	plt.xlabel('x')
-# 	plt.ylabel('y')
-# 	plt.show()
+		plt.plot(X,predicted_Y,'o')
+		plt.xlabel('x')
+		plt.ylabel('y')
+		plt.show()
