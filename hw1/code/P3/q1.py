@@ -19,7 +19,7 @@ def ridgeWeights(X, Y, M, lambda_):
 	phi_squared = np.dot(phi_transposed, phi)
 	reg_identity = lambda_ * np.eye(np.shape(phi_squared)[0])
 
-	pseudo_inverse = np.dot(np.linalg.inv(reg_identity - phi_squared), phi_transposed)
+	pseudo_inverse = np.dot(np.linalg.inv(reg_identity + phi_squared), phi_transposed)
 	return np.dot(pseudo_inverse, Y)
 
 M_possible = list(range(1, 11))
@@ -28,8 +28,8 @@ X, Y = getCurveData(False)
 
 def plotGraphs():
 	for M in M_possible:
-		weight_ml = ridgeWeights(X, Y, M, 0.01)
-		basis_function = np.polynomial.Polynomial(weight_ml)
+		weight_ridge = ridgeWeights(X, Y, M, 0.01)
+		basis_function = np.polynomial.Polynomial(weight_ridge)
 		predicted_Y = np.apply_along_axis(basis_function, 0, X)
 
 		plt.plot(X,predicted_Y,'o')

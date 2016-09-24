@@ -1,10 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np 
 from loadFittingDataP2 import getData as getCurveData
-"""
-y = np.ones(3)
-x = np.polynomial.Polynomial(y)
-"""
+
 """
 	Given an array of 1D points X, a vector of corresponding values Y,
 	and the maximum order of a simple polynomial basis M, returns the
@@ -34,3 +31,5 @@ def plotGraphs():
 		plt.xlabel('x')
 		plt.ylabel('y')
 		plt.show()
+
+plotGraphs()
