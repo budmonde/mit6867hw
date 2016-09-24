@@ -15,9 +15,9 @@ def SSE(dataset, labels, weights):
 
 
 def SSEgrad(dataset, labels):
-  assert len(dataset.shape) == 1 and dataset.shape[0]
-  assert len(labels.shape) == 1 and labels.shape[0]
   def SSEgradSampler(weights):
+    assert len(dataset.shape) == 1 and dataset.shape[0]
+    assert len(labels.shape) == 1 and labels.shape[0]
     assert len(weights.shape) == 1 and weights.shape[0]
     basis_function = np.polynomial.Polynomial(weights)
     Y = np.apply_along_axis(basis_function, 0, X)
