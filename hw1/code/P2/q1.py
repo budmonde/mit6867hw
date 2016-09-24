@@ -14,7 +14,8 @@ def weightML(X, Y, M):
 	num_terms = M + 1
 	X_tiled = np.tile(X, (num_terms, 1))
 	phi = X_tiled.T
-	phi_transposed = np.power(xrange(num_terms)[:,np.newaxis],phi).T
+	phi = np.power(phi, np.arange(num_terms))
+	phi_transposed = phi.T
 
 	pseudo_inverse = np.dot(np.linalg.inv(np.dot(phi_transposed, phi)), phi_transposed)
 	return np.dot(pseudo_inverse, Y)
