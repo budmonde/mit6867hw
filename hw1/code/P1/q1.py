@@ -7,17 +7,18 @@ from loadFittingDataP1 import getData as getFittingData
     Runs gradient descent given an objective function along
     with its gradient.
 """
-def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1):
-    assert step > 0
+def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
     assert epsilon > 0
-    previous_value = float("inf")
-    current_value = init
+    current_value = np.copy(init)
+    gradient = grad_func(current_value)
     iteration = 0
-    while abs(obj_func(current_value) - obj_func(previous_value)) > epsilon:
-        previous_value = current_value
-        current_value -= step(iteration) * grad_func(current_value)
+
+    while np.linalg.norm(gradient) > epsilon:
+        current_value -= step(iteration) * gradient
+        gradient = grad_func(current_value)
         iteration += 1
-    return current_value
+
+    return (current_value, iteration)
 
 """
     Given the mean and the covariance, instantiates a function
@@ -28,6 +29,7 @@ def negativeGaussianDist(mean, cov):
     def gaussianSampler(x):
         return -multivariate_normal.pdf(x, mean, cov)
     return gaussianSampler
+
 """
     Given the mean and the covariance, instantiates a function
     that returns the gradient of a negativeGaussianDist
@@ -37,6 +39,7 @@ def negativeGaussGradDist(mean, cov):
         coeff = -multivariate_normal.pdf(x, mean=mean, cov=cov)
         return  coeff * np.linalg.inv(cov).dot(x - mean)
     return gaussianGradSampler
+
 """
     Given A and b, returns a function that returns the Quadratic Bowl for a given x
 """
@@ -44,7 +47,7 @@ def quadBowl(A, b):
     def quadBowlSampler(x):
         x_transpose = np.transpose(x)
         first_term = 0.5 * np.dot(np.dot(x_transpose, A), x)
-        second_term = x_transpose * b
+        second_term = np.dot(x_transpose, b)
         return first_term - second_term
     return quadBowlSampler
 
@@ -55,6 +58,10 @@ def quadBowlGrad(A, b):
     def quadBowlGradSampler(x):
         return np.dot(A, x) - b
     return quadBowlGradSampler
+
+
+
+    
 
 params = getParameters()
 gaussMean = params[0]
@@ -67,9 +74,23 @@ actualGaussGrad = negativeGaussGradDist(gaussMean, gaussCov)
 actualQuadBowl = quadBowl(quadA, quadb)
 actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
 
-x = np.asarray((0,0))
+inits = [np.array([0.0, 0.0]), np.array([1.0, 1.0]), np.array([10.0, 10.0]), np.array([26.0, 26.0])]
+steps = [lambda x: 1e-4, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
+epsilons = [1e-1, 1e-2, 1e-3, 1e-4]
 
-print actualGauss(x)
-print actualGaussGrad(x)
-print actualQuadBowl(x)
-print actualQuadBowlGrad(x)
+def testGauss():
+    for init in inits:
+        for step in steps:
+            for epsilon in epsilons:
+                print "Init: %s, Step: %s, Epsilon: %f" % (init, step(1), epsilon)
+                print gradientDescent(actualGauss, actualGaussGrad, init, epsilon, step)
+
+def testBowl():
+    for init in inits:
+        for step in steps:
+            for epsilon in epsilons:
+                print "Init: %s, Step: %s, Epsilon: %f" % (init, step(1), epsilon)
+                print gradientDescent(actualQuadBowl, actualQuadBowlGrad, init, epsilon, step)
+
+# testGauss()
+# testBowl()
