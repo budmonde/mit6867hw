@@ -13,3 +13,4 @@ def centralDifference(f, x, h):
     gradients.append((f(x + 0.5*step) - f(x - 0.5*step)) / h)
 
   return np.array(gradients)
+
