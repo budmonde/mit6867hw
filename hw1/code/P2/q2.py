@@ -3,7 +3,7 @@ from q1 import *
 from loadFittingDataP2 import *
 import sys
 sys.path.insert(0, '../P1')
-from q2 import centralDifference
+# from q2 import centralDifference
 
 def SSE(dataset, labels):
   def SSEsampler(weights):
@@ -28,14 +28,14 @@ def SSEgrad(dataset, labels):
     return gradient
   return SSEgradSampler
 
-X, Y = getData(False)
-weights = weightML(X, Y, 4)
-SSEsampler = SSE(X, Y)
-print SSEsampler(weights)
-SSEGradsampler = SSEgrad(X, Y)
-print SSEGradsampler(weights)
+# X, Y = getData(False)
+# weights = weightML(X, Y, 4)
+# SSEsampler = SSE(X, Y)
+# print SSEsampler(weights)
+# SSEGradsampler = SSEgrad(X, Y)
+# print SSEGradsampler(weights)
 
-print centralDifference(SSEsampler, weights, 0.01)
+# print centralDifference(SSEsampler, weights, 0.01)
 
 # print centralDifference(SSEsampler, weights, np.array([0, 0.1, 0, 0, 0]))
 # print SSE(X, Y, weights+np.asarray((0.5 * 1e-1, 0))) - SSE(X, Y, weights-np.asarray((0.5 *1e-1, 0)))

@@ -29,7 +29,8 @@ X, Y = getCurveData(False)
 
 def plotGraphs():
 	for M in M_possible:
-		weight_ridge = ridgeWeights(X, Y, M, 0.00)
+		weight_ridge = ridgeWeights(X, Y, M, 0.1)
+		print weight_ridge
 		basis_function = np.polynomial.Polynomial(weight_ridge)
 		predicted_Y = np.apply_along_axis(basis_function, 0, X)
 
@@ -38,15 +39,17 @@ def plotGraphs():
 		plt.ylabel('y')
 		plt.show()
 
+# plotGraphs()
+
 # train => A, test => B
 train_X, train_Y = regressAData()
 test_X, test_Y = regressBData()
 val_X, val_Y = validateData()
 
-#plt.plot(train_X, train_Y, 'ro')
-#plt.plot(val_X, val_Y, 'bo')
-#plt.plot(test_X, test_Y, 'go')
-#plt.show()
+# plt.plot(train_X, train_Y, 'ro')
+# plt.plot(val_X, val_Y, 'bo')
+# plt.plot(test_X, test_Y, 'go')
+# plt.show()
 
 def squarederror(X,Y,w):
   num_terms = w.size
@@ -58,7 +61,7 @@ def squarederror(X,Y,w):
   return error
 
 
-if __name__ == "__main__":
-  for l in [la / 100. for la in range(0,50)]:
-    w = ridgeWeights(train_X, train_Y, 10, l)
-    print str(l) + ": " + str(error(val_X, val_Y, w))
+# if __name__ == "__main__":
+#   for l in [la / 100. for la in range(0,50)]:
+#     w = ridgeWeights(train_X, train_Y, 10, l)
+#     print str(l) + ": " + str(error(val_X, val_Y, w))

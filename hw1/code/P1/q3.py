@@ -2,6 +2,7 @@ import numpy as np
 from q1 import gradientDescent
 from q2 import centralDifference
 from loadFittingDataP1 import getData as getFittingData
+import random
 
 # Part a and b
 
@@ -76,20 +77,22 @@ iteration = 0
 epsilon = 1e-3
 
 while np.linalg.norm(gradient) > epsilon:
-    for i in xrange(100):
+    # for i in xrange(100):
 
-        X_i = np.copy(X[i])
-        X_i.shape = (1,10)
-        y_i = np.array([np.copy(y[i])])
+    i = random.randint(0,99)
 
-        sgdJ = J(X_i, y_i)
-        sgdJGrad = JGrad(X_i, y_i)
+    X_i = np.copy(X[i])
+    X_i.shape = (1,10)
+    y_i = np.array([np.copy(y[i])])
 
-        current_value -= step(iteration) * gradient
-        gradient = sgdJGrad(current_value)
-        iteration += 1
+    sgdJ = J(X_i, y_i)
+    sgdJGrad = JGrad(X_i, y_i)
 
-        if np.linalg.norm(gradient) <= epsilon:
-            break
+    current_value -= step(iteration) * gradient
+    gradient = sgdJGrad(current_value)
+    iteration += 1
+
+    # if np.linalg.norm(gradient) <= epsilon:
+    #     break
 
 print (current_value, iteration)
