@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import multivariate_normal
 from loadParametersP1 import getData as getParameters
-from loadFittingDataP1 import getData as getFittingData
+from q2 import centralDifference
 
 """
     Runs gradient descent given an objective function along
@@ -13,7 +13,13 @@ def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
     gradient = grad_func(current_value)
     iteration = 0
 
+    # print gradient
+
     while np.linalg.norm(gradient) > epsilon:
+        # print np.linalg.norm(gradient)
+        # print current_value
+        # print (step(iteration), gradient)
+
         current_value -= step(iteration) * gradient
         gradient = grad_func(current_value)
         iteration += 1
@@ -61,7 +67,7 @@ def quadBowlGrad(A, b):
 
 
 
-    
+
 
 params = getParameters()
 gaussMean = params[0]
@@ -75,7 +81,8 @@ actualQuadBowl = quadBowl(quadA, quadb)
 actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
 
 inits = [np.array([0.0, 0.0]), np.array([1.0, 1.0]), np.array([10.0, 10.0]), np.array([26.0, 26.0])]
-steps = [lambda x: 1e-4, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
+steps = [lambda x: 1e-4, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1, lambda x: 1.0]
+steps.reverse()
 epsilons = [1e-1, 1e-2, 1e-3, 1e-4]
 
 def testGauss():
@@ -94,3 +101,22 @@ def testBowl():
 
 # testGauss()
 # testBowl()
+
+def testCentralDifference(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
+    assert epsilon > 0
+    current_value = np.copy(init)
+    gradient = grad_func(current_value)
+    central_difference = centralDifference(obj_func, current_value, 0.001)
+    iteration = 0
+
+    while np.linalg.norm(gradient) > epsilon:
+        print gradient[0] - central_difference[0] < 0.0000001 and gradient[1] - central_difference[1] < 0.0000001
+
+        current_value -= step(iteration) * gradient
+        gradient = grad_func(current_value)
+        central_difference = centralDifference(obj_func, current_value, 0.001)
+        iteration += 1
+
+    return (current_value, iteration)
+
+# print testCentralDifference(actualQuadBowl, actualQuadBowlGrad, np.array([0., 0.]), 1e-4, lambda x: 0.1)
