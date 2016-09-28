@@ -33,7 +33,7 @@ def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
 """
 def negativeGaussianDist(mean, cov):
     def gaussianSampler(x):
-        return -multivariate_normal.pdf(x, mean, cov)
+        return np.negative(multivariate_normal.pdf(x, mean, cov))
     return gaussianSampler
 
 """
@@ -42,7 +42,7 @@ def negativeGaussianDist(mean, cov):
 """
 def negativeGaussGradDist(mean, cov):
     def gaussianGradSampler(x):
-        coeff = -multivariate_normal.pdf(x, mean=mean, cov=cov)
+        coeff = multivariate_normal.pdf(x, mean=mean, cov=cov)
         return  coeff * np.linalg.inv(cov).dot(x - mean)
     return gaussianGradSampler
 
@@ -81,9 +81,20 @@ actualQuadBowl = quadBowl(quadA, quadb)
 actualQuadBowlGrad = quadBowlGrad(quadA, quadb)
 
 inits = [np.array([0.0, 0.0]), np.array([1.0, 1.0]), np.array([10.0, 10.0]), np.array([26.0, 26.0])]
-steps = [lambda x: 1e-4, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1, lambda x: 1.0]
-steps.reverse()
-epsilons = [1e-1, 1e-2, 1e-3, 1e-4]
+
+"""
+steps and epsilon for testing quad bowl
+"""
+# steps = [lambda x: 1e-4, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
+# steps.reverse()
+# epsilons = [1e-1, 1e-2, 1e-3, 1e-4]
+
+"""
+steps and epsilon for testing gauss 
+"""
+steps = [lambda x: 1e4, lambda x: 1e5, lambda x: 1e6, lambda x: 1e7]#, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
+epsilons = [1e-11]#, 1e-2, 1e-3, 1e-4]
+
 
 def testGauss():
     for init in inits:
