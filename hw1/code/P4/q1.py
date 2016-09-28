@@ -25,7 +25,7 @@ true_W = [0, 0, 5.6463, 7.785999999999999600e-01, 0, 8.108999999999999500e-01, 2
 true_W = np.asarray(true_W)
 
 M_list = [1, 3, 5, 13]
-l_list = [0.0001, 0.01, 1.0, 2.0]
+l_list = [0, 0.01, 1.0, 2.0]
 
 ########################
 
@@ -40,6 +40,15 @@ def lassoSinFit(X, Y, M, l):
   clf = linear_model.Lasso(alpha = l)
   clf.fit(phi_X, Y)
   return clf
+
+def MLE(X, Y, M):
+  phi = makeBasis(X, M)
+  pinv = np.dot(np.linalg.inv(np.dot(phi.T, phi)), phi.T)
+  return np.dot(pinv, Y)
+
+def MLEpredict(W, X, M):
+  phi = makeBasis(X, M)
+  return np.dot(phi, W)
 
 def lassoPredict(W, X, M):
   phi_X = makeBasis(X, M)
@@ -95,7 +104,7 @@ def plotWeightCurve():
     curve_pred_Y = lassoPredict(clf.coef_, curve_X, M)
     plt.rc('lines', linewidth=2, linestyle="--")
     plt.plot(curve_X, curve_pred_Y, color[i], label=labels[i])
-  
+  #plt.plot(val_X, val_Y, 'ko')  
   plt.title("Predictions of different regression results")
   plt.ylabel("$y$")
   plt.xlabel("$x$")
@@ -122,9 +131,9 @@ def plotLowLambda():
   plt.tight_layout()
   plt.show()
   
-plotLowLambda()
+#plotLowLambda()
 plotWeightCurve()
-plotWeightDist()
+#plotWeightDist()
 #for M in M_list:
 #  result = ""
 #  for l in l_list:
