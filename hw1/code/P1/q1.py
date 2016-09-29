@@ -13,13 +13,7 @@ def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
     gradient = grad_func(current_value)
     iteration = 0
 
-    # print gradient
-
     while np.linalg.norm(gradient) > epsilon:
-        # print np.linalg.norm(gradient)
-        # print current_value
-        # print (step(iteration), gradient)
-
         current_value -= step(iteration) * gradient
         gradient = grad_func(current_value)
         iteration += 1
@@ -92,8 +86,8 @@ steps and epsilon for testing quad bowl
 """
 steps and epsilon for testing gauss 
 """
-steps = [lambda x: 1e4, lambda x: 1e5, lambda x: 1e6, lambda x: 1e7]#, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
-epsilons = [1e-11]#, 1e-2, 1e-3, 1e-4]
+steps = [lambda x: 1e4, lambda x: 1e5, lambda x: 1e6]#, lambda x: 1e-3, lambda x: 1e-2, lambda x: 1e-1]
+epsilons = [1e-11, 1e-10, 1e-9, 1e-8]#, 1e-2, 1e-3, 1e-4]
 
 
 def testGauss():
@@ -117,7 +111,7 @@ def testCentralDifference(obj_func, grad_func, init, epsilon, step=lambda x: 1.0
     assert epsilon > 0
     current_value = np.copy(init)
     gradient = grad_func(current_value)
-    central_difference = centralDifference(obj_func, current_value, 0.001)
+    central_difference = centralDifference(obj_func, current_value, 1e-8)
     iteration = 0
 
     while np.linalg.norm(gradient) > epsilon:
@@ -131,3 +125,4 @@ def testCentralDifference(obj_func, grad_func, init, epsilon, step=lambda x: 1.0
     return (current_value, iteration)
 
 # print testCentralDifference(actualQuadBowl, actualQuadBowlGrad, np.array([0., 0.]), 1e-4, lambda x: 0.1)
+# print testCentralDifference(actualGauss, actualGaussGrad, np.array([0., 0.]), 1e-8, lambda x: 1e6)
