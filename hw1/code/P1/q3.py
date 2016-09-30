@@ -2,6 +2,7 @@ import numpy as np
 from q1 import gradientDescent
 from q2 import centralDifference
 from loadFittingDataP1 import getData as getFittingData
+import random
 
 # Part a and b
 
@@ -44,12 +45,12 @@ def learningRate(a, b):
         return (a + t) ** -b
     return learningRateSampler
 
-
+X, y = getFittingData()
+errorFunction = J(X, y)
 
 """
 Batch 
 """
-X, y = getFittingData()
 
 batchJ = J(X, y)
 batchJGrad = JGrad(X, y)
@@ -58,25 +59,34 @@ batch_init = np.ones(10)
 
 batchTheta = gradientDescent(batchJ, batchJGrad, batch_init, 1e-3, lambda x: 1e-7)
 print batchTheta
+print errorFunction(batchTheta[0])
 
 """
 SGD 
 """
-X_0 = np.copy(X[0])
-X_0.shape = (1, 10)
-y_0 = np.array([np.copy(y[0])])
 
-sgdJ = J(X_0, y_0)
-sgdJGrad = JGrad(X_0, y_0)
-step = learningRate(1e6, 0.75)
+average_theta = np.zeros(10)
+average_iterations = 0
+average_error = 0
 
-current_value = np.ones(10)
-gradient = sgdJGrad(current_value)
-iteration = 0
-epsilon = 1e-3
+for repeat in xrange(10):
+    X_0 = np.copy(X[0])
+    X_0.shape = (1, 10)
+    y_0 = np.array([np.copy(y[0])])
 
-while np.linalg.norm(gradient) > epsilon:
-    for i in xrange(100):
+    sgdJ = J(X_0, y_0)
+    sgdJGrad = JGrad(X_0, y_0)
+    step = learningRate(1e7, 0.9)
+
+    current_value = np.ones(10)
+    gradient = sgdJGrad(current_value)
+    iteration = 0
+    epsilon = 1e-3
+
+    while np.linalg.norm(gradient) > epsilon:
+        # for i in xrange(100):
+
+        i = random.randint(0,99)
 
         X_i = np.copy(X[i])
         X_i.shape = (1,10)
@@ -89,7 +99,16 @@ while np.linalg.norm(gradient) > epsilon:
         gradient = sgdJGrad(current_value)
         iteration += 1
 
-        if np.linalg.norm(gradient) <= epsilon:
-            break
+        # if np.linalg.norm(gradient) <= epsilon:
+        #     break
 
-print (current_value, iteration)
+    average_theta += current_value
+    average_iterations += iteration
+    average_error += errorFunction(current_value)
+
+average_theta = average_theta / 10.0
+average_iterations = average_iterations / 10.0
+average_error = average_error / 10.0
+
+print (average_theta, average_iterations)
+print average_error
