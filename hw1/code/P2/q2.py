@@ -23,6 +23,7 @@ def SSEgrad(dataset, labels):
     assert len(weights.shape) == 1 and weights.shape[0]
     basis_function = np.polynomial.Polynomial(weights)
     Y = np.apply_along_axis(basis_function, 0, dataset)
+    print Y
     power_X = np.power(dataset[:,np.newaxis], np.arange(weights.size)).T
     gradient = 2 * np.dot(power_X, Y - labels)
     return gradient
@@ -33,9 +34,9 @@ if __name__ == "__main__":
   train_X, train_Y = getData(False)
   SSEsampler = SSE(train_X, train_Y)
   SSEGradsampler = SSEgrad(train_X, train_Y)
-  for M in [0,1,3,13]:
-    weights = weightML(train_X, train_Y, M)
-    #print SSEsampler(weights)
+  for M in [1]:
+    weights = np.asarray((1, 1))
+    print SSEsampler(weights)
     print np.around(SSEGradsampler(weights), 6)
     print np.around(centralDifference(SSEsampler, weights, 0.0000001), 6)
     
