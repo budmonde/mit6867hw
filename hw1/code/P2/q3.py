@@ -13,6 +13,7 @@ def gradientDescent(obj_func, grad_func, init, epsilon, step=lambda x: 1.0):
     iteration = 0
 
     while np.linalg.norm(gradient) > epsilon:
+        print gradient
 
         current_value -= step(iteration) * gradient
         gradient = grad_func(current_value)
@@ -42,7 +43,7 @@ def plotGraphs(M, W):
     plt.plot(curve_X, true_Y, 'g', label="True Function")
     plt.scatter(X, Y, s=80, color='none', edgecolors='b', label="Training Data") 
     plt.plot(curve_X,predicted_Y,'r', label="ML Function")
-    plt.title("ML Estimation for $M = " + str(M) + "$")
+    plt.title("SGD for $M = " + str(M) + "$")
     plt.xlabel('$x$')
     plt.ylabel('$y$')
     plt.xlim((-0.01,1.01))
@@ -57,7 +58,7 @@ def plotGraphs(M, W):
 #             W_tuple = gradientDescent(SSEsamp, SSEgradsamp, np.zeros(M+1), epsilon, step)
 #             print W_tuple
 #             print true_error(W_tuple[0])
-#             # plotGraphs(M, W_tuple[0])
+            # plotGraphs(M, W_tuple[0])
 
 # epsilon: 0.000010, step: 0.050000, M: 1.000000
 # (array([ 0.90553837, -1.8128226 ]), 144)
@@ -82,67 +83,67 @@ def learningRate(a, b):
 SGD
 """
 
-M = 5
+# M = 5
 
-X_0 = np.array([X[0]])
-y_0 = np.array([Y[0]])
+# X_0 = np.array([X[0]])
+# y_0 = np.array([Y[0]])
 
-SSE_sgd = SSE(X, Y)
-SSEGrad_sgd = SSEgrad(X, Y)
-step = learningRate(0.001, 0.75)
+# SSE_sgd = SSE(X, Y)
+# SSEGrad_sgd = SSEgrad(X, Y)
+# step = learningRate(0.001, 0.75)
 
-current_value = np.zeros(M + 1)
-gradient = None
-iteration = 0
-epsilon = 1e-12
-i = 0
+# current_value = np.zeros(M + 1)
+# gradient = None
+# iteration = 0
+# epsilon = 1e-12
+# i = 0
 
-# a = np.arange(11)
-# np.random.shuffle(a)
-# current_X = X[a]
-# current_Y = Y[a]
+# # a = np.arange(11)
+# # np.random.shuffle(a)
+# # current_X = X[a]
+# # current_Y = Y[a]
 
-# print current_X
-# print current_Y
-print M
-print epsilon
+# # print current_X
+# # print current_Y
+# print M
+# print epsilon
 
-while True:
-# while np.linalg.norm(gradient) > epsilon:
-    # print np.linalg.norm(gradient)
-    # print gradient
-    # if i == 0:
-    #     np.random.shuffle(a)
-    #     current_X = X[a]
-    #     current_Y = Y[a]
+# while True:
+# # while np.linalg.norm(gradient) > epsilon:
+#     # print np.linalg.norm(gradient)
+#     # print gradient
+#     # if i == 0:
+#     #     np.random.shuffle(a)
+#     #     current_X = X[a]
+#     #     current_Y = Y[a]
 
-    # if iteration == 100:
-    #     print current_value
-    #     break
+#     # if iteration == 100:
+#     #     print current_value
+#     #     break
 
-    #print current_value
+#     #print current_value
+#     print gradient
+#     previous_value = np.copy(current_value)
 
-    previous_value = np.copy(current_value)
+#     # i = random.randint(0,9)
 
-    # i = random.randint(0,9)
+#     X_i = np.array([X[i]])
+#     y_i = np.array([Y[i]])
 
-    X_i = np.array([X[i]])
-    y_i = np.array([Y[i]])
+#     # SSE_sgd = SSE(X_i, y_i)
+#     SSEGrad_sgd = SSEgrad(X_i, y_i)
 
-    # SSE_sgd = SSE(X_i, y_i)
-    SSEGrad_sgd = SSEgrad(X_i, y_i)
-
-    gradient = SSEGrad_sgd(current_value)
-    current_value -= step(iteration) * gradient
+#     gradient = SSEGrad_sgd(current_value)
+#     current_value -= step(iteration) * gradient
     
-    iteration += 1
-    i = (i + 1) % 11
+#     iteration += 1
+#     i = (i + 1) % 11
 
-    if abs(SSE_sgd(previous_value) - SSE_sgd(current_value)) < epsilon:
-        break
+#     if abs(SSE_sgd(previous_value) - SSE_sgd(current_value)) < epsilon:
+#         break
 
-print (current_value, iteration)
-print true_error(current_value)
+# print (current_value, iteration)
+# print true_error(current_value)
 
 """
 TRUE RESULTS (WEIGHTML)
@@ -169,10 +170,17 @@ TRUE RESULTS (WEIGHTML)
 # print true_weight
 # print true_error(true_weight)
 
+# print 0.692863439198 - 0.736631918942
+# print 0.654845749965 - 0.760530596044
+# print 0.64936233986 - 0.743365604343
+print 0.529986204219 - 0.738221191564
+
 """
 BATCH RESULTS
 """
 # print true_error(np.array([   2.25869484,   -3.38804008,  -50.95469981,  159.1625217 , -174.73509436,   68.44531092]))
+
+# plotGraphs(5, np.array([   2.25869484,   -3.38804008,  -50.95469981,  159.1625217 , -174.73509436,   68.44531092]))
 
 # epsilon: 0.000010, step: 0.050000, M: 1.000000
 # (array([0.90553837, -1.8128226]), 144)
@@ -194,6 +202,8 @@ BATCH RESULTS
 SGD RESULTS - step = (0.001 + i) ** 0.75
 """
 # print true_error([  2.56470498, -12.58562914,   9.53786411,   2.2235123 , -0.19405481,  -0.88105479])
+
+# plotGraphs(5, np.array([  2.55890343, -12.56228511,   9.53210096,   2.21414115, -0.20005449,  -0.88110584]))
 
 # M = 2, epsilon = 1e-12
 # (array([  2.57764511, -12.886568  ,  11.04363367]), 163355)
