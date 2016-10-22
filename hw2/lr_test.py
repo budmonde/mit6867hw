@@ -4,7 +4,7 @@ import pylab as pl
 # import your LR training code
 
 # parameters
-name = 'ls'
+name = '1'
 print '======Training======'
 # load data from csv files
 train = loadtxt('data/data'+name+'_train.csv')
@@ -18,7 +18,7 @@ Y = train[:,2:3]
 ### TODO ###
 
 # plot training results
-plotDecisionBoundary(X, Y, predictLR, [0.5], title = 'LR Train')
+# plotDecisionBoundary(X, Y, predictLR, [0.5], title = 'LR Train')
 
 print '======Validation======'
 # load data from csv files
