@@ -1,31 +1,50 @@
-from numpy import *
+import numpy as np
 from plotBoundary import *
 import pylab as pl
-# import your LR training code
+from sklearn.linear_model import LogisticRegression
 
 # parameters
-name = 'ls'
-print '======Training======'
+name = "3"
+print "======Training======"
 # load data from csv files
-train = loadtxt('data/data'+name+'_train.csv')
-X = train[:,0:2]
-Y = train[:,2:3]
+train = np.loadtxt("data/data"+name+"_train.csv")
+train_X = train[:,0:2]
+train_Y = train[:,2:3]
+train_y = train_Y.ravel()
+
+def makeclf(p, c):
+  clf = LogisticRegression(penalty=p, C=c)
+  clf.fit(train_X, train_y)
+  return clf
 
 # Carry out training.
-### TODO ###
+clf = makeclf("l2", 0.5)
 
 # Define the predictLR(x) function, which uses trained parameters
-### TODO ###
+predictLR = lambda x: clf.predict(x.reshape(1,-1))
 
 # plot training results
-plotDecisionBoundary(X, Y, predictLR, [0.5], title = 'LR Train')
+plotDecisionBoundary(train_X, train_Y, predictLR, [0.5], title = "LR Train")
 
-print '======Validation======'
+print "======Validation======"
 # load data from csv files
-validate = loadtxt('data/data'+name+'_validate.csv')
-X = validate[:,0:2]
-Y = validate[:,2:3]
+validate = np.loadtxt("data/data"+name+"_validate.csv")
+val_X = validate[:,0:2]
+val_Y = validate[:,2:3]
+val_y = val_Y.ravel()
 
 # plot validation results
-plotDecisionBoundary(X, Y, predictLR, [0.5], title = 'LR Validate')
+plotDecisionBoundary(val_X, val_Y, predictLR, [0.5], title = "LR Validate")
 pl.show()
+
+"""
+p = "l2"
+errors = []
+for l in np.arange(0.1, 10, 0.1):
+  c = 1 / l
+  clf = makeclf(p, c)
+  errors.append(clf.score(val_X, val_y))
+  print l, clf.score(val_X, val_y)
+errors = np.asarray(errors)
+print np.argmax(errors), np.max(errors)
+"""
