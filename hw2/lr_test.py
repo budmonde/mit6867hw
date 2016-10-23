@@ -5,7 +5,6 @@ from sklearn.linear_model import LogisticRegression
 
 # parameters
 name = "3"
->>>>>>> 95f07bd7257f668ee47521ad2e7af999bc513b1f
 # load data from csv files
 train = np.loadtxt("data/data"+name+"_train.csv")
 train_X = train[:,0:2]
@@ -24,11 +23,7 @@ clf = makeclf("l2", 0.5)
 predictLR = lambda x: clf.predict(x.reshape(1,-1))
 
 # plot training results
-<<<<<<< HEAD
-# plotDecisionBoundary(X, Y, predictLR, [0.5], title = 'LR Train')
-=======
 plotDecisionBoundary(train_X, train_Y, predictLR, [0.5], title = "LR Train")
->>>>>>> 95f07bd7257f668ee47521ad2e7af999bc513b1f
 
 print "======Validation======"
 # load data from csv files
