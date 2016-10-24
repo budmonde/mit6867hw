@@ -6,7 +6,12 @@ import numpy as np
 def trainAlphas(X, Y, C, kernel=lambda i, j: np.dot(i, j)):
     N = X.shape[0]
 
-    P = matrix(np.fromfunction(lambda i, j: 1.0 * Y[i] * Y[j] * kernel(X[i], X[j]), (N, N)))
+    def createP(i, j):
+        return 1.0 * Y[i] * Y[j] * kernel(X[i], X[j])
+
+    vectorized_createP = np.vectorize(createP)
+
+    P = matrix(np.fromfunction(vectorized_createP, (N, N)))
     q = matrix(np.ones(N) * -1.0)
     G = matrix(np.concatenate((np.diag(np.ones(N)) * -1.0, np.diag(np.ones(N)))))
     h = matrix(np.concatenate((np.zeros(N), np.ones(N) * C * 1.0)))
@@ -33,7 +38,7 @@ def trainAlphas(X, Y, C, kernel=lambda i, j: np.dot(i, j)):
 
 def gaussianRBF(variance):
     def gaussianInstance(x, x_prime):
-        norm_squared = np.linalg.norm(x, x_prime) ** 2.0
+        norm_squared = np.linalg.norm(x - x_prime) ** 2.0
         var_coeff = -1.0 / (2.0 * variance)
         return np.exp(norm_squared * var_coeff)
     return gaussianInstance
