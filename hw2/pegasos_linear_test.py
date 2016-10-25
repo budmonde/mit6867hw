@@ -21,7 +21,7 @@ function = lambda i: 2**i
 lmbda = function(-10);
 
 while t < max_epochs:
-	for i in xrange(W_size):
+	for i in xrange(X_copy.shape[0]):
 		t += 1
 		eta_t = 1.0 / (t * lmbda)
 
@@ -47,23 +47,25 @@ def predict_linearSVM(x):
 	else: 
 		return -1
 
+X_error = np.apply_along_axis(predict_linearSVM, 1, np.array(np.copy(X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(Y)))
+print 1.0 - np.sum(X_error == Y_error) * 1.0 / len(Y)
+
 # plot training results
-plotDecisionBoundary(X, Y, predict_linearSVM, [-1,0,1], title = 'Linear SVM, lambda = 2^0')
-pl.show()
+# plotDecisionBoundary(X, Y, predict_linearSVM, [-1,0,1], title = 'Linear SVM, lambda = 2^-10')
+# pl.show()
 
+# 1 / ||W||, Error
 
-
-# 1 / ||W||
-
-# lambda = 2^1: 1.60267132356
-# lambda = 2^0: 1.31722585026
-# lambda = 2^-1: 0.985336875994
-# lambda = 2^-2: 0.985796815247
-# lambda = 2^-3: 0.979923909713
-# lambda = 2^-4: 0.978973994226
-# lambda = 2^-5: 0.962516649667
-# lambda = 2^-6: 0.94053606465
-# lambda = 2^-7: 0.552340455285  runtime error
-# lambda = 2^-8: 0.258256398002
-# lambda = 2^-9: 0.122607908617
-# lambda = 2^-10: 0.0598107276361
+# lambda = 2^1: 2.14664305676, 0.04
+# lambda = 2^0: 1.4078462905, 0.0625
+# lambda = 2^-1: 1.13301642912, 0.0525
+# lambda = 2^-2: 0.929924386203, 0.04
+# lambda = 2^-3: 0.763484837567, 0.04
+# lambda = 2^-4: 0.650461218271, 0.0375
+# lambda = 2^-5: 0.528705570719, 0.0325
+# lambda = 2^-6: 0.420633314494, 0.02
+# lambda = 2^-7: 0.328270548761, 0.02
+# lambda = 2^-8: 0.245660191627, 0.0175
+# lambda = 2^-9: 0.145795398482, 0.0275
+# lambda = 2^-10: 0.086417612291, 0.0125

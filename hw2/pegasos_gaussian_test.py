@@ -15,17 +15,17 @@ max_epochs = 1000
 lmbda = .02
 gamma_list = [2**2, 2, 1, 2**-1, 2**-2]
 
-def gaussianRBFVectorized(variance):
+def gaussianRBFVectorized(gamma):
     def gaussianInstance(i, j):
         norm_squared = np.linalg.norm(X[i] - X[j]) ** 2.0
-        var_coeff = -1.0 / (2.0 * variance)
+        var_coeff = -gamma
         return np.exp(norm_squared * var_coeff)
     return gaussianInstance
 
-def gaussianRBF(variance):
+def gaussianRBF(gamma):
     def gaussianInstance(x, x_prime):
         norm_squared = np.linalg.norm(x - x_prime) ** 2.0
-        var_coeff = -1.0 / (2.0 * variance)
+        var_coeff = -gamma
         return np.exp(norm_squared * var_coeff)
     return gaussianInstance
 
@@ -64,6 +64,10 @@ def predict_gaussianSVM(x):
 		return 1
 	else:
 		return -1
+
+X_error = np.apply_along_axis(predict_gaussianSVM, 1, np.array(np.copy(X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(Y)))
+print 1.0 - np.sum(X_error == Y_error) * 1.0 / len(Y)
 
 # plot training results
 plotDecisionBoundary(X, Y, predict_gaussianSVM, [-1,0,1], title = 'Gaussian Kernel SVM, gamma = 0.25')
