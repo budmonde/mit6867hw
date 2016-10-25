@@ -15,17 +15,17 @@ max_epochs = 1000
 lmbda = .02
 gamma_list = [2**2, 2, 1, 2**-1, 2**-2]
 
-def gaussianRBFVectorized(variance):
+def gaussianRBFVectorized(gamma):
     def gaussianInstance(i, j):
         norm_squared = np.linalg.norm(X[i] - X[j]) ** 2.0
-        var_coeff = -1.0 / (2.0 * variance)
+        var_coeff = -gamma
         return np.exp(norm_squared * var_coeff)
     return gaussianInstance
 
-def gaussianRBF(variance):
+def gaussianRBF(gamma):
     def gaussianInstance(x, x_prime):
         norm_squared = np.linalg.norm(x - x_prime) ** 2.0
-        var_coeff = -1.0 / (2.0 * variance)
+        var_coeff = -gamma
         return np.exp(norm_squared * var_coeff)
     return gaussianInstance
 
