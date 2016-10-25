@@ -65,6 +65,10 @@ def predict_gaussianSVM(x):
 	else:
 		return -1
 
+X_error = np.apply_along_axis(predict_gaussianSVM, 1, np.array(np.copy(X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(Y)))
+print 1.0 - np.sum(X_error == Y_error) * 1.0 / len(Y)
+
 # plot training results
 plotDecisionBoundary(X, Y, predict_gaussianSVM, [-1,0,1], title = 'Gaussian Kernel SVM, gamma = 0.25')
 pl.show()

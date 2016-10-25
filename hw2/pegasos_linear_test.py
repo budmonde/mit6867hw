@@ -47,21 +47,25 @@ def predict_linearSVM(x):
 	else: 
 		return -1
 
+X_error = np.apply_along_axis(predict_linearSVM, 1, np.array(np.copy(X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(Y)))
+print 1.0 - np.sum(X_error == Y_error) * 1.0 / len(Y)
+
 # plot training results
-plotDecisionBoundary(X, Y, predict_linearSVM, [-1,0,1], title = 'Linear SVM, lambda = 2^-10')
-pl.show()
+# plotDecisionBoundary(X, Y, predict_linearSVM, [-1,0,1], title = 'Linear SVM, lambda = 2^-10')
+# pl.show()
 
-# 1 / ||W||
+# 1 / ||W||, Error
 
-# lambda = 2^1: 2.14664305676
-# lambda = 2^0: 1.4078462905
-# lambda = 2^-1: 1.13301642912
-# lambda = 2^-2: 0.929924386203
-# lambda = 2^-3: 0.763484837567
-# lambda = 2^-4: 0.650461218271
-# lambda = 2^-5: 0.528705570719
-# lambda = 2^-6: 0.420633314494
-# lambda = 2^-7: 0.328270548761
-# lambda = 2^-8: 0.245660191627
-# lambda = 2^-9: 0.145795398482
-# lambda = 2^-10: 0.086417612291
+# lambda = 2^1: 2.14664305676, 0.04
+# lambda = 2^0: 1.4078462905, 0.0625
+# lambda = 2^-1: 1.13301642912, 0.0525
+# lambda = 2^-2: 0.929924386203, 0.04
+# lambda = 2^-3: 0.763484837567, 0.04
+# lambda = 2^-4: 0.650461218271, 0.0375
+# lambda = 2^-5: 0.528705570719, 0.0325
+# lambda = 2^-6: 0.420633314494, 0.02
+# lambda = 2^-7: 0.328270548761, 0.02
+# lambda = 2^-8: 0.245660191627, 0.0175
+# lambda = 2^-9: 0.145795398482, 0.0275
+# lambda = 2^-10: 0.086417612291, 0.0125
