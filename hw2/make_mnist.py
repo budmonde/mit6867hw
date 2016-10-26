@@ -9,43 +9,44 @@ TOTAL_SZ = TRAIN_SZ + VAL_SZ + TEST_SZ
 VECTOR_SZ = 784
 
 def makeDataset(plist, nlist, normalize=False):
+  totlist = plist + nlist
   pdigits = len(plist)
   ndigits = len(nlist)
-  totlist = plist + nlist
-
-  total_sz = pdigits * TOTAL_SZ + ndigits * TOTAL_SZ
+  digits = len(totlist)
+  
+  total_sz = digits * TOTAL_SZ
+  n_sz = ndigits * TOTAL_SZ
   p_sz = pdigits * TOTAL_SZ
 
-  X = np.zeros((total_sz, VECTOR_SZ))
+  train_X = np.zeros((digits * TRAIN_SZ, VECTOR_SZ))
+  val_X = np.zeros((digits * VAL_SZ, VECTOR_SZ))
+  test_X = np.zeros((digits * TEST_SZ, VECTOR_SZ))
+
+  train_Y = np.ones((digits*TRAIN_SZ))
+  train_Y[pdigits*TRAIN_SZ:] *= -1
+  train_Y = train_Y[:, np.newaxis]
+
+  val_Y = np.ones((digits*VAL_SZ))
+  val_Y[pdigits*VAL_SZ:] *= -1
+  val_Y = val_Y[:, np.newaxis]
+
+  test_Y = np.ones((digits*TEST_SZ))
+  test_Y[pdigits*TEST_SZ:] *= -1
+  test_Y = test_Y[:, np.newaxis]
 
   k = 0
   for filename in totlist:
     with open(filename, 'r') as f:
       reader = csv.reader(f, delimiter=" ")
-      X[k*TOTAL_SZ:(k+1)*TOTAL_SZ] = np.asarray([[int(s) for s in row] for i, row in enumerate(reader) if i < TOTAL_SZ])
+      temp = np.asarray([[int(s) for s in row] for i, row in enumerate(reader) if i < TOTAL_SZ])
+      train_X[k*TRAIN_SZ:(k+1)*TRAIN_SZ] = temp[:TRAIN_SZ]
+      val_X[k*VAL_SZ:(k+1)*VAL_SZ] = temp[TRAIN_SZ:TRAIN_SZ+VAL_SZ]
+      test_X[k*TEST_SZ:(k+1)*TEST_SZ] = temp[TRAIN_SZ+VAL_SZ:]
     k += 1
 
   if normalize:
-    X = 2*X/255. - 1
-
-  Y = np.ones((total_sz))
-  Y[p_sz:] *= -1
-  Y = Y[:, np.newaxis]
-
-  pos_tr = 0
-  pos_v = pos_tr + pdigits*(TRAIN_SZ)
-  pos_t = pos_v + pdigits*(VAL_SZ)
-  neg_tr = p_sz
-  neg_v = neg_tr + ndigits*(TRAIN_SZ)
-  neg_t = neg_v + ndigits*(VAL_SZ)
-
-  train_X = np.concatenate((X[pos_tr:pos_v,:], X[neg_tr:neg_v,:]), axis=0)
-  val_X = np.concatenate((X[pos_v:pos_t,:], X[neg_v:neg_t,:]), axis=0)
-  test_X = np.concatenate((X[pos_t:neg_tr,:], X[neg_t:,:]), axis=0)
-
-  train_Y = np.concatenate((Y[pos_tr:pos_v], Y[neg_tr:neg_v]))
-  val_Y = np.concatenate((Y[pos_v:pos_t], Y[neg_v:neg_t]))
-  test_Y = np.concatenate((Y[pos_t:neg_tr], Y[neg_t:]))
+    train_X = 2*train_X/255. - 1
+    val_X = 2*val_X/255. - 1
+    test_X = 2*test_X/255. - 1
 
   return train_X, val_X, test_X, train_Y, val_Y, test_Y
-
