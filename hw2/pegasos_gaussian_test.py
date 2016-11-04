@@ -1,12 +1,18 @@
 import numpy as np
 from plotBoundary import *
 import pylab as pl
+from make_mnist import *
+
 # import your LR training code
 
 # load data from csv files
-train = loadtxt('data/data3_train.csv')
-X = train[:,0:2]
-Y = train[:,2:3]
+#train = loadtxt('data/data3_train.csv')
+#X = train[:,0:2]
+#Y = train[:,2:3]
+
+#X, val_X, test_X, Y, val_Y, test_Y = makeDataset(["data/mnist_digit_0.csv", "data/mnist_digit_2.csv", "data/mnist_digit_4.csv", "data/mnist_digit_6.csv", "data/mnist_digit_8.csv"], ["data/mnist_digit_1.csv", "data/mnist_digit_3.csv", "data/mnist_digit_5.csv", "data/mnist_digit_7.csv", "data/mnist_digit_9.csv"], normalize=True)
+X, val_X, test_X, Y, val_Y, test_Y = makeDataset(["data/mnist_digit_3.csv"], ["data/mnist_digit_5.csv"], normalize=True)
+train_y, val_y, test_y = Y.ravel(), val_Y.ravel(), test_Y.ravel()
 X_size = X.shape[0]
 alpha_size = X.shape[1]
 
@@ -67,8 +73,16 @@ def predict_gaussianSVM(x):
 
 X_error = np.apply_along_axis(predict_gaussianSVM, 1, np.array(np.copy(X)))
 Y_error = np.ndarray.flatten(np.array(np.copy(Y)))
-print 1.0 - np.sum(X_error == Y_error) * 1.0 / len(Y)
+print np.sum(X_error == Y_error) * 1.0 / len(Y)
+
+X_error = np.apply_along_axis(predict_gaussianSVM, 1, np.array(np.copy(val_X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(val_Y)))
+print np.sum(X_error == Y_error) * 1.0 / len(val_Y)
+
+X_error = np.apply_along_axis(predict_gaussianSVM, 1, np.array(np.copy(test_X)))
+Y_error = np.ndarray.flatten(np.array(np.copy(test_Y)))
+print np.sum(X_error == Y_error) * 1.0 / len(test_Y)
 
 # plot training results
-plotDecisionBoundary(X, Y, predict_gaussianSVM, [-1,0,1], title = 'Gaussian Kernel SVM, gamma = 0.25')
-pl.show()
+#plotDecisionBoundary(X, Y, predict_gaussianSVM, [-1,0,1], title = 'Gaussian Kernel SVM, gamma = 0.25')
+#pl.show()

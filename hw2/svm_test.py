@@ -17,70 +17,73 @@ print '======Training======'
 
 # Params for part c
 C_list = [0.01, 0.1, 1, 10, 100]
-#bandwidths = [1e-1, 1, 10]
+bandwidths = [1e-1, 1, 10]
 # C_list = [1]
 # bandwidths = [1]
 # gaussian_kernels = map(lambda x: gaussianRBF(x), bandwidths)
 
-train_X, val_X, test_X, train_Y, val_Y, test_Y = makeDataset(["data/mnist_digit_0.csv", "data/mnist_digit_2.csv", "data/mnist_digit_4.csv", "data/mnist_digit_6.csv", "data/mnist_digit_8.csv"], ["data/mnist_digit_1.csv", "data/mnist_digit_3.csv", "data/mnist_digit_5.csv", "data/mnist_digit_7.csv", "data/mnist_digit_9.csv"])
-#train_X, val_X, test_X, train_Y, val_Y, test_Y = makeDataset(["data/mnist_digit_4.csv"], ["data/mnist_digit_9.csv"])
+train_X, val_X, test_X, train_Y, val_Y, test_Y = makeDataset(["data/mnist_digit_0.csv", "data/mnist_digit_2.csv", "data/mnist_digit_4.csv", "data/mnist_digit_6.csv", "data/mnist_digit_8.csv"], ["data/mnist_digit_1.csv", "data/mnist_digit_3.csv", "data/mnist_digit_5.csv", "data/mnist_digit_7.csv", "data/mnist_digit_9.csv"], normalize=True)
+#train_X, val_X, test_X, train_Y, val_Y, test_Y = makeDataset(["data/mnist_digit_4.csv"], ["data/mnist_digit_9.csv"], normalize=True)
 train_y, val_y, test_y = train_Y.ravel(), val_Y.ravel(), test_Y.ravel()
 
 for C in C_list:
-	#for bd in bandwidths:
-  print "C = %f" % C
-  #print "b = %f" % bd
+  for bd in bandwidths:
+    print "C = %f" % C
+    print "b = %f" % bd
 
-  #kernel = gaussianRBF(bd)
-  kernel = lambda i, j: np.dot(i, j)
+    kernel = gaussianRBF(bd)
+    #kernel = lambda i, j: np.dot(i, j)
 
-  model, b = trainAlphas(train_X.copy(), train_Y.copy(), C, kernel)
-  alphas = np.array(np.copy(model['x']))
-  threshold = 1e-6
-  nonzero_alphas = np.where(alphas > threshold)
+    model, b = trainAlphas(train_X.copy(), train_Y.copy(), C, kernel)
+    alphas = np.array(np.copy(model['x']))
+    threshold = 1e-6
+    nonzero_alphas = np.where(alphas > threshold)
 
-  print "num svs = %f" % len(nonzero_alphas[0])
+    print "num svs = %f" % len(nonzero_alphas[0])
 
-  primal_obj = model['primal objective']
-  # kernel = lambda i, j: np.dot(i, j)
+    primal_obj = model['primal objective']
+    # kernel = lambda i, j: np.dot(i, j)
 
-  # Define the predictSVM(x) function, which uses trained parameters
-  def predictSVM(x):
-    X_copy = np.array(np.copy(train_X))
-    X_size = X_copy.shape[0]
-    X_indices = np.indices((X_size, )).T
-    nonzero_alpha_indices = X_indices[nonzero_alphas]
-    X_kernel = np.apply_along_axis(np.vectorize(lambda i: alphas[i] * train_Y[i] * kernel(x, X_copy[i])), 0, nonzero_alpha_indices)
+    # Define the predictSVM(x) function, which uses trained parameters
+    def predictSVM(x):
+      X_copy = np.array(np.copy(train_X))
+      X_size = X_copy.shape[0]
+      X_indices = np.indices((X_size, )).T
+      nonzero_alpha_indices = X_indices[nonzero_alphas]
+      X_kernel = np.apply_along_axis(np.vectorize(lambda i: alphas[i] * train_Y[i] * kernel(x, X_copy[i])), 0, nonzero_alpha_indices)
 
-    y_x = np.sum(X_kernel) + b
+      y_x = np.sum(X_kernel) + b
 
-    if y_x > 0:
-      return 1
-    elif y_x == 0:
-      return 0
-    return -1
+      if y_x > 0:
+        return 1
+      elif y_x == 0:
+        return 0
+      return -1
 
-  #X_train_error = np.apply_along_axis(predictSVM, 1, np.array(np.copy(X_train)))
-  #Y_train_error = np.ndarray.flatten(np.array(np.copy(Y_train)))
-  #print 1.0 - np.sum(X_train_error == Y_train_error) * 1.0 / len(Y_train)
+    X_train_error = np.apply_along_axis(predictSVM, 1, np.array(np.copy(train_X)))
+    Y_train_error = np.ndarray.flatten(np.array(np.copy(train_Y)))
+    print 1.0 - np.sum(X_train_error == Y_train_error) * 1.0 / len(train_Y)
 
-  # plot training results
-  #plotDecisionBoundary(X, Y, predictSVM, [-1, 0, 1], title = 'SVM Train Dataset 4, C = %f, b = %f' % (C, bd))
+    # plot training results
+    #plotDecisionBoundary(X, Y, predictSVM, [-1, 0, 1], title = 'SVM Train Dataset 4, C = %f, b = %f' % (C, bd))
 
 
-  print '======Validation======'
-  # load data from csv files
-  #validate = loadtxt('data/data'+name+'_validate.csv')
-  #X = validate[:, 0:2]
-  #Y = validate[:, 2:3]
+    print '======Validation======'
+    # load data from csv files
+    #validate = loadtxt('data/data'+name+'_validate.csv')
+    #X = validate[:, 0:2]
+    #Y = validate[:, 2:3]
 
-  X_validate_error = np.apply_along_axis(predictSVM, 1, np.array(np.copy(val_X)))
-  Y_validate_error = np.ndarray.flatten(np.array(np.copy(val_Y)))
-  print 1.0 - np.sum(X_validate_error == Y_validate_error) * 1.0 / len(val_Y)
-  # plot validation results
-  #plotDecisionBoundary(X, Y, predictSVM, [-1, 0, 1], title = 'SVM Validate Dataset 4, C = %f, b = %f' % (C, bd))
-  #pl.show()
+    X_validate_error = np.apply_along_axis(predictSVM, 1, np.array(np.copy(test_X)))
+    Y_validate_error = np.ndarray.flatten(np.array(np.copy(test_Y)))
+    print 1.0 - np.sum(X_validate_error == Y_validate_error) * 1.0 / len(test_Y)
+    # plot validation results
+    #plotDecisionBoundary(X, Y, predictSVM, [-1, 0, 1], title = 'SVM Validate Dataset 4, C = %f, b = %f' % (C, bd))
+    #pl.show()
 
+    X_validate_error = np.apply_along_axis(predictSVM, 1, np.array(np.copy(val_X)))
+    Y_validate_error = np.ndarray.flatten(np.array(np.copy(val_Y)))
+    print 1.0 - np.sum(X_validate_error == Y_validate_error) * 1.0 / len(val_Y)
 
 
 
