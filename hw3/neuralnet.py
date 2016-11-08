@@ -38,13 +38,15 @@ class Layer:
     assert top_w.shape[0] == self.top and top_w.shape[1] == self.width+1
     assert top_back.size == self.top
 
-    self.dstate = activation.derivative(self.state).ravel()
+    der = activation.derivative(self.state).ravel()
+    self.dstate = top_back.dot(top_w)[1:] * der
 
     assert self.dstate.size == self.width
 
-    return top_back.dot(top_w)[1:] * self.dstate
+    return self.dstate
 
   def update(self):
+
     self.w -= self.lrate * self.bottom_out.T * self.dstate.reshape((self.width,1))
 
 class NeuralNet:
@@ -65,6 +67,3 @@ if __name__ == "__main__":
   print layer.back(np.arange(1,13).reshape((4,3)), np.asarray([1,2,3,4]))
   print "UPDATE:"
   layer.update()
-  print "state", layer.state
-  print "dstate", layer.dstate
-  print "w", layer.w
