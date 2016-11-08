@@ -14,6 +14,7 @@ class Function:
 def ReLU(x):
 	size_x = x.shape[0]
 	zeros = np.zeros(size_x)
+
 	return np.maximum(zeros, x)
 
 def ReLU_derivative(x):
@@ -28,3 +29,20 @@ def softmax(x):
 
 	return exp / exp_sum
 
+def delta_L(y):
+	max_output = np.amax(y)
+	target_vector = np.copy(y)
+
+	target_vector_zeros = y < max_output
+	target_vector[target_vector_zeros] = 0
+
+	target_vector_one = np.where(y == max_output)
+	filter_multiple_ones = np.array(target_vector_one[0][0])
+
+	target_vector[target_vector_one] = 0
+	target_vector[filter_multiple_ones] = 1
+
+	return y - target_vector
+
+def dummy_derivative(x):
+	return x
