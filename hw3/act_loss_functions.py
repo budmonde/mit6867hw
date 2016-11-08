@@ -38,9 +38,12 @@ def delta_L(y):
 
 	return y - target_vector
 
+def cross_entropy(true_y, softmax):
+	int_true_y = int(true_y)
+	return -1.0 * np.log(softmax[int_true_y])
+
 def dummy_derivative(x):
 	return x
-
 
 if __name__ == "__main__":
   f = Function(ReLU, ReLU_derivative)
