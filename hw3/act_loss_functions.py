@@ -12,10 +12,19 @@ class Function:
 		return self.derivative(input)
 
 def ReLU(x):
-	return max(0, x)
+	size_x = x.shape[0]
+	zeros = np.zeros(size_x)
+	return np.maximum(zeros, x)
 
 def ReLU_derivative(x):
-	if x <= 0:
-		return 0
-	return 1
+	x_bool = x > 0
+	x_derivative = x_bool.astype(int)
+
+	return x_derivative
+
+def softmax(x):
+	exp = np.exp(x)
+	exp_sum = np.sum(exp)
+
+	return exp / exp_sum
 
