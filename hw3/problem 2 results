@@ -1,0 +1,336 @@
+Part 2:
+
+Batch loss average: 0.058374
+Batch training accuracy average: 100.0%
+Validation accuracy average: 55.9%
+Full train accuracy average: 87.3%
+
+
+
+
+Part 3:
+
+Batch loss average: 0.284658
+Batch training accuracy average: 98.0%
+Validation accuracy average: 59.3%
+Full train accuracy average: 76.5%
+
+
+
+
+Part 4:
+
+######
+
+Dropout:
+
+Dropout rate = 0
+Batch loss average: 0.284658
+Batch training accuracy average: 98.0%
+Validation accuracy average: 59.3%
+Full train accuracy average: 76.5%
+
+Dropout rate = 0.1
+Batch loss average: 0.386806
+Batch training accuracy average: 92.0%
+Validation accuracy average: 58.2%
+Full train accuracy average: 73.1%
+
+Dropout rate = 0.2
+Batch loss average: 0.512853
+Batch training accuracy average: 82.0%
+Validation accuracy average: 60.5%
+Full train accuracy average: 73.2%
+
+Dropout rate = 0.3
+Batch loss average: 0.600500
+Batch training accuracy average: 76.0%
+Validation accuracy average: 60.7%
+Full train accuracy average: 70.8%
+
+Dropout rate = 0.4
+Batch loss average: 0.729152
+Batch training accuracy average: 70.0%
+Validation accuracy average: 58.9%
+Full train accuracy average: 67.7%
+
+Dropout rate = 0.5
+Batch loss average: 0.814610
+Batch training accuracy average: 72.0%
+Validation accuracy average: 57.7%
+Full train accuracy average: 65.9%
+
+######
+
+Weight Penalty:
+
+Penalty = 0.001
+Batch loss average: 0.379503
+Batch training accuracy average: 94.0%
+Validation accuracy average: 57.9%
+Full train accuracy average: 77.7%
+
+Penalty = 0.01:
+Batch loss average: 0.888491
+Batch training accuracy average: 98.0%
+Validation accuracy average: 58.4%
+Full train accuracy average: 74.2%
+
+Penalty = 0.05:
+Batch loss average: 1.472593
+Batch training accuracy average: 86.0%
+Validation accuracy average: 57.0%
+Full train accuracy average: 70.4%
+
+Penalty = 0.1:
+Batch loss average: 1.314787
+Batch training accuracy average: 74.0%
+Validation accuracy average: 52.6%
+Full train accuracy average: 60.3%
+
+Penalty = 0.2:
+Batch loss average: 1.198722
+Batch training accuracy average: 66.0%
+Validation accuracy average: 46.7%
+Full train accuracy average: 54.5%
+
+Penalty = 0.3:
+Batch loss average: 1.272324
+Batch training accuracy average: 64.0%
+Validation accuracy average: 43.2%
+Full train accuracy average: 50.2%
+
+######
+
+Data Augmentation:
+
+Training Steps = 1500
+Batch loss average: 0.993557
+Batch training accuracy average: 72.0%
+Validation accuracy average: 55.9%
+Full train accuracy average: 67.2%
+
+Training Steps = 2000
+Batch loss average: 0.842249
+Batch training accuracy average: 64.0%
+Validation accuracy average: 53.1%
+Full train accuracy average: 71.5%
+
+Training Steps = 2500
+Batch loss average: 1.055497
+Batch training accuracy average: 62.0%
+Validation accuracy average: 55.9%
+Full train accuracy average: 80.6%
+
+Training Steps = 3500
+Batch loss average: 0.373621
+Batch training accuracy average: 88.0%
+Validation accuracy average: 56.8%
+Full train accuracy average: 82.3%
+
+Training Steps = 4500
+Batch loss average: 0.323876
+Batch training accuracy average: 80.0%
+Validation accuracy average: 56.3%
+Full train accuracy average: 89.8%
+
+Training Steps = 5500
+Batch loss average: 0.046997
+Batch training accuracy average: 100.0%
+Validation accuracy average: 62.1%
+Full train accuracy average: 96.0%
+
+Training Steps = 6000
+Batch loss average: 0.075474
+Batch training accuracy average: 100.0%
+Validation accuracy average: 62.6%
+Full train accuracy average: 98.0%
+
+Training Steps = 7500
+Batch loss average: 0.051836
+Batch training accuracy average: 100.0%
+Validation accuracy average: 60.3%
+Full train accuracy average: 98.8%
+
+######
+
+Early Stopping:
+
+Training Steps = 1500
+Batch loss average: 0.284658
+Batch training accuracy average: 98.0%
+Validation accuracy average: 59.3%
+Full train accuracy average: 76.5%
+
+Training Steps = 1300
+Batch loss average: 1.023244
+Batch training accuracy average: 70.0%
+Validation accuracy average: 62.5%
+Full train accuracy average: 76.1%
+
+Training Steps = 1100
+Batch loss average: 0.648964
+Batch training accuracy average: 72.0%
+Validation accuracy average: 64.1%
+Full train accuracy average: 79.7%
+
+Training Steps = 900
+Batch loss average: 0.879536
+Batch training accuracy average: 68.0%
+Validation accuracy average: 57.5%
+Full train accuracy average: 74.0%
+
+Training Steps = 700
+Batch loss average: 0.487623
+Batch training accuracy average: 82.0%
+Validation accuracy average: 56.6%
+Full train accuracy average: 65.4%
+
+######
+
+Discuss Results here:
+
+
+
+
+Part 5:
+
+######
+
+# Hyperparameters
+batch_size = 10
+learning_rate = 0.01
+layer1_filter_size = 5
+layer1_depth = 16
+layer1_stride = 2
+layer2_filter_size = 5
+layer2_depth = 16
+layer2_stride = 2
+layer3_num_hidden = 64
+layer4_num_hidden = 64
+num_training_steps = 1501
+
+# Add max pooling
+pooling = False
+layer1_pool_filter_size = 2
+layer1_pool_stride = 2
+layer2_pool_filter_size = 2
+layer2_pool_stride = 2
+
+######
+
+Regular Stuff Without Pooling
+Batch loss average: 0.058374
+Batch training accuracy average: 100.0%
+Validation accuracy average: 55.9%
+Full train accuracy average: 87.3%
+
+Regular Stuff With Pooling
+Batch loss average: 0.284658
+Batch training accuracy average: 98.0%
+Validation accuracy average: 59.3%
+Full train accuracy average: 76.5%
+
+######
+
+Varying Filter Size
+
+Filter Size = 6, Pooling = False
+Batch loss average: 0.036330
+Batch training accuracy average: 100.0%
+Validation accuracy average: 56.1%
+Full train accuracy average: 89.6%
+
+Filter Size = 6, Pooling = True
+Batch loss average: 0.207047
+Batch training accuracy average: 100.0%
+Validation accuracy average: 58.2%
+Full train accuracy average: 79.1%
+
+Filter Size = 7, Pooling = False
+Batch loss average: 0.016096
+Batch training accuracy average: 100.0%
+Validation accuracy average: 57.2%
+Full train accuracy average: 93.7%
+
+Filter Size = 7, Pooling = True
+Batch loss average: 0.184618
+Batch training accuracy average: 100.0%
+Validation accuracy average: 60.5%
+Full train accuracy average: 84.6%
+
+Filter Size = 8, Pooling = False
+Batch loss average: 0.015239
+Batch training accuracy average: 100.0%
+Validation accuracy average: 59.3%
+Full train accuracy average: 97.5%
+
+Filter Size = 8, Pooling = True
+Batch loss average: 0.131594
+Batch training accuracy average: 100.0%
+Validation accuracy average: 60.5%
+Full train accuracy average: 84.8%
+
+Filter Size = 9, Pooling = False
+Batch loss average: 0.139990
+Batch training accuracy average: 98.0%
+Validation accuracy average: 56.1%
+Full train accuracy average: 96.8%
+
+Filter Size = 9, Pooling = True
+Batch loss average: 0.108692
+Batch training accuracy average: 100.0%
+Validation accuracy average: 60.5%
+Full train accuracy average: 91.2%
+
+######
+
+Varying Stride
+
+Stride = 3, Pooling = False
+Batch loss average: 0.191108
+Batch training accuracy average: 100.0%
+Validation accuracy average: 57.9%
+Full train accuracy average: 83.7%
+
+Stride = 3, Pooling = True
+Batch loss average: 0.493735
+Batch training accuracy average: 90.0%
+Validation accuracy average: 57.5%
+Full train accuracy average: 68.1%
+
+Stride = 4, Pooling = False
+Batch loss average: 0.370784
+Batch training accuracy average: 94.0%
+Validation accuracy average: 57.5%
+Full train accuracy average: 77.3%
+
+Stride = 4, Pooling = True
+Batch loss average: 0.898721
+Batch training accuracy average: 70.0%
+Validation accuracy average: 50.6%
+Full train accuracy average: 57.4%
+
+Stride = 5, Pooling = False
+Batch loss average: 0.419702
+Batch training accuracy average: 96.0%
+Validation accuracy average: 56.8%
+Full train accuracy average: 72.7%
+
+Stride = 5, Pooling = True
+Batch loss average: 0.828066
+Batch training accuracy average: 64.0%
+Validation accuracy average: 49.7%
+Full train accuracy average: 59.0%
+
+######
+
+Varying Depth
+
+Depth = 20, Pooling = False
+Batch loss average: 0.039856
+Batch training accuracy average: 100.0%
+Validation accuracy average: 57.7%
+Full train accuracy average: 89.2%
+
+Depth = 20, Pooling = True

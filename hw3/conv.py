@@ -12,6 +12,12 @@ NUM_CHANNELS = 3
 NUM_LABELS = 11
 INCLUDE_TEST_SET = False
 
+iterations = 5
+avg_loss = 0
+avg_batch_training_acc = 0
+avg_validation_acc = 0
+avg_full_train_acc = 0
+
 class ArtistConvNet:
 	def __init__(self, invariance=False):
 		'''Initialize the class by loading the required datasets 
@@ -30,17 +36,17 @@ class ArtistConvNet:
 		batch_size = 10
 		learning_rate = 0.01
 		layer1_filter_size = 5
-		layer1_depth = 16
+		layer1_depth = 20
 		layer1_stride = 2
 		layer2_filter_size = 5
-		layer2_depth = 16
+		layer2_depth = 20
 		layer2_stride = 2
 		layer3_num_hidden = 64
 		layer4_num_hidden = 64
 		num_training_steps = 1501
 
 		# Add max pooling
-		pooling = False
+		pooling = True
 		layer1_pool_filter_size = 2
 		layer1_pool_stride = 2
 		layer2_pool_filter_size = 2
@@ -161,6 +167,17 @@ class ArtistConvNet:
 							print('Validation accuracy: %.1f%%' % accuracy(val_preds, self.val_Y))
 							print('Full train accuracy: %.1f%%' % accuracy(train_preds, self.train_Y))
 
+							if step == num_training_steps - 1:
+								global avg_loss
+								global avg_batch_training_acc
+								global avg_validation_acc
+								global avg_full_train_acc
+
+								avg_loss += l * 1.0 / iterations
+								avg_batch_training_acc += accuracy(predictions, batch_labels) * 1.0 / iterations
+								avg_validation_acc += accuracy(val_preds, self.val_Y) * 1.0 / iterations
+								avg_full_train_acc += accuracy(train_preds, self.train_Y) * 1.0 / iterations
+
 					# This code is for the final question
 					if self.invariance:
 						print "\n Obtaining final results on invariance sets!"
@@ -223,9 +240,17 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == 'invariance':
 		print "Testing finished model on invariance datasets!"
 		invariance = True
-	
-	t1 = time.time()
-	conv_net = ArtistConvNet(invariance=invariance)
-	conv_net.train_model()
-	t2 = time.time()
+
+	for i in xrange(iterations):
+		t1 = time.time()
+		conv_net = ArtistConvNet(invariance=invariance)
+		conv_net.train_model()
+		t2 = time.time()
+
+	print('\n')
+	print('Batch loss average: %f' % avg_loss)
+	print('Batch training accuracy average: %.1f%%' % avg_batch_training_acc)
+	print('Validation accuracy average: %.1f%%' % avg_validation_acc)
+	print('Full train accuracy average: %.1f%%' % avg_full_train_acc)
+
 	print "Finished training. Total time taken:", t2-t1
