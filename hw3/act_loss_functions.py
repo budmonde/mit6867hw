@@ -19,13 +19,20 @@ class Function:
       return "Softmax"
 
 def ReLU(x):
-  return np.clip(x, 0, np.inf)
+  #return x
+  return np.maximum(0, x)
+  #return np.clip(x, 0, np.inf)
 
 def ReLU_derivative(x):
-  return np.ceil(np.clip(x, 0, 1))
+  #return np.ones(x.shape)
+  positives = np.maximum(0,x)
+  positives[positives > 0] = 1
+  return positives
+  #return np.ceil(np.clip(x, 0, 1))
 
 def softmax(x):
-  exp = np.exp(x)
+  x = x - np.amax(x)
+  exp = np.exp(x) + 1e-16
   exp_sum = np.sum(exp)
 
   return exp / exp_sum
@@ -46,25 +53,17 @@ def delta_L(y):
   return y - target_vector
 
 def delta_L2((true_y, softmax)):
-	int_true_y = int(true_y)
-	num_classes = softmax.shape[0]
-
-	one_hot_target = np.zeros(num_classes)	
-	one_hot_target[int_true_y] = 1.0
-
-	return softmax - one_hot_target
+  int_true_y = int(true_y)
+  num_classes = softmax.shape[0]
+  one_hot_target = np.zeros(num_classes)	
+  one_hot_target[int_true_y] = 1.0
+  one_hot_target = one_hot_target.reshape(softmax.shape)
+  return softmax - one_hot_target
 
 def cross_entropy((true_y, softmax)):
-	int_true_y = int(true_y)
-	return -1.0 * np.log(softmax[int_true_y])
+  int_true_y = int(true_y)
+  return -1.0 * np.log(softmax[int_true_y])
 
 def dummy_derivative(x):
   return x
 
-if __name__ == "__main__":
-  # f = Function(ReLU, ReLU_derivative)
-  # a = np.arange(-5, 10)
-  # print a
-
-  # a = np.array([1, 5, 6, 8, 9, 7, 4])
-  # print delta_L2((2.0, a))

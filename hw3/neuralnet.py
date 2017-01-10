@@ -31,7 +31,6 @@ class Layer:
     assert self.dstate.size == self.width
     assert self.bottom_out.shape == (self.bottom+1, 1)
     assert self.w.shape == (self.width, self.bottom+1)
-    #print self
 
   def forward(self, bottom_out):
     bottom_out = bottom_out.reshape((bottom_out.ravel().size, 1))
@@ -41,11 +40,6 @@ class Layer:
     self.bottom_out = np.insert(bottom_out, 0, 1).reshape((self.bottom+1, 1))
     self.state = self.activation.output(self.w.dot(self.bottom_out))
 
-#    if self.activation.type == "Softmax":
-#      print "here"
-#      print self.state
-#      print "done"
-#
     self.check()
 
     return self.state
@@ -54,10 +48,7 @@ class Layer:
     assert top_w.shape == (self.top, self.width+1)
     assert top_back.size == self.top
 
-    der = self.activation.derivative(self.state).ravel()
-    print "#######"
-    print der
-    print "#######"
+    der = self.activation.derivative(self.bottom_out).ravel()
     self.dstate = top_back.dot(top_w)[1:] * der
 
     self.check()
@@ -65,7 +56,7 @@ class Layer:
     return self.dstate
 
   def update(self):
-    self.w -= self.lrate * self.bottom_out.T * self.dstate.reshape((self.width,1))
+    self.w -= self.lrate * self.dstate.T * self.bottom_out
 
     self.check()
 
@@ -101,21 +92,30 @@ class NeuralNet:
       i.check()
 
   def forward(self, data, label):
-    top_out = data
+    bottom_out = data
     for i in range(len(self.layers)):
-      top_out = self.layers[i].forward(top_out)
-    self.state = float(self.loss((label, self.layers[-1].state)))
+      bottom_out = self.layers[i].forward(bottom_out)
+    self.state += float(self.loss((label, self.layers[-1].state)))
 
     self.check()
 
     return self.layers[-1].state
 
-  def backprop(self):
-    top_back = np.ones(1)
-    top_w = np.ones(self.label_sz+1).reshape(1,self.label_sz+1)
-    for i in range(1, len(self.layers)+1):
-      top_back = self.layers[-i].backprop(top_w, top_back)
+  def backprop(self, data, label):
+    out = self.layers[-1]
+    out.dstate = out.activation.derivative((label, out.state)).ravel()
+    top_back = out.dstate
+    top_w = out.w
+    bottom_state = self.layers[-2].state
+
+    for i in range(2, len(self.layers)+1):
+      top_back = self.layers[-i].backprop(bottom_state, top_w, top_back)
       top_w = self.layers[-i].w
+      if i == len(self.layers):
+        bottom_state = data
+      else:
+        bottom_state = self.layers[-i-1].state
+    self.layers[0].dstate = top_back.dot(top_w)[1:] * bottom_state
 
     self.check()
 
@@ -127,18 +127,32 @@ class NeuralNet:
 
   def cycle(self, data, label):
     self.forward(data, label)
-    self.backprop()
+    self.backprop(data, label)
     self.update()
 
   def SGD(self, data, labels, threshold):
+    it = 0
+    self.state = 0.0
     diff = np.inf
     err = np.inf
-    while diff > threshold:
+    while diff > threshold or it == 1000:
       for i in range(data.shape[0]):
         self.cycle(data[i,:], labels[i,:])
-        print self.state
       diff = abs(err - self.state)
       err = self.state
+      self.state = 0.0
+      it += 1
+
+  def error(self, data, labels):
+    for i in range(data.shape[0]):
+      self.forward(data[i,:], labels[i,:])
+    return self.state / data.shape[0]
+
+  def accuracy(self, data, labels):
+    hits = 0
+    for i in range(data.shape[0]):
+      hits += (labels[i,:] == np.argmax(self.forward(data[i,:], labels[i,:])))
+    return float(hits) / float(data.shape[0])
       
   def __str__(self):
     string = ""
@@ -152,31 +166,37 @@ class NeuralNet:
     
 if __name__ == "__main__":
   activation = Function(ReLU, ReLU_derivative, "ReLU")
-  out_activation = Function(softmax, delta_L, "Softmax")
+  out_activation = Function(softmax, delta_L2, "Softmax")
   loss = cross_entropy
-  net = NeuralNet([2,5,3], activation, out_activation, loss, 0.1, init="Ones")
-  data, labels = read_data()
-  i=0
-  print "\n\n###INPUT###\n\n"
-  print data[i,:], labels[i,:]
-  print "\n\n###INIT###\n\n"
-  print net
-  print "\n\n###FORWARD###\n\n"
-  net.forward(data[i,:], labels[i,:])
-  print net
-  print "\n\n###BACKPROP###\n\n"
-  net.backprop()
-  print net
-  print "\n\n###UPDATE###\n\n"
-  net.update()
-  print net
+  net = NeuralNet([2,5,2], activation, out_activation, loss, 0.01, init="Gauss")
+  data, labels = read_data("data/data2_train.csv")
 
-#  net.SGD(data, labels, 0.1)
-#  i = 31
-#  print "LABEL:"
-#  print data[i,:], labels[i,:]
-#  print "PREDICTION"
-#  print net.forward(data[i,:], labels[i,:])
+  net.SGD(data, labels, 0.001)
+  i = 1
+  #print "LABEL:"
+  #print data[i,:], labels[i,:]
+  #print labels[i,:]
+  print "SCORE"
+  print net.error(data, labels)
+  print "ACCURACY"
+  print net.accuracy(data, labels)
+  #print net.state
+  #print net.forward(data[i,:], labels[i,:])
+
+  #i=0
+  #print "\n\n###INPUT###\n\n"
+  #print data[i,:], labels[i,:]
+  #print "\n\n###INIT###\n\n"
+  #print net
+  #print "\n\n###FORWARD###\n\n"
+  #net.forward(data[i,:], labels[i,:])
+  #print net
+  #print "\n\n###BACKPROP###\n\n"
+  #net.backprop(labels[i,:])
+  #print net
+  #print "\n\n###UPDATE###\n\n"
+  #net.update()
+  #print net
 
   ## Testing Layer
   #layer = Layer(3, 2, 4, activation, 0.1, init=None)
